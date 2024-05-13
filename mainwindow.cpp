@@ -18,7 +18,9 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
+    imageSize.setHeight(500);
+    imageSize.setWidth(500);
+    image = new QPixmap(imageSize);
     image->fill(Qt::white);
     label->setPixmap(*image);
     QPixmap colorPM(20, 20);
@@ -81,6 +83,11 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    // qDebug() << "main resize";
 }
 
 void MainWindow::openAction()

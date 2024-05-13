@@ -8,6 +8,8 @@
 #include <QPointF>
 #include <QActionGroup>
 #include <QPen>
+#include <QResizeEvent>
+#include <QSize>
 #include "paintfield.h"
 #include "messagelabel.h"
 
@@ -19,21 +21,21 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
     QString currentFile;
+    QSize imageSize;
     PaintField* label = new PaintField(this);
-    QPixmap* image = new QPixmap(500, 500);
+    QPixmap* image;
     QColor color;
     QAction* colorAction;
     QActionGroup* actionGroup = new QActionGroup(nullptr);
     int size = QPen().width();
 
-
-
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
+    virtual void resizeEvent(QResizeEvent *event);
     friend PaintField;
     friend MessageLabel;
+
 
 public slots:
     void openAction();

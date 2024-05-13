@@ -9,7 +9,7 @@
 void PaintField::rerender()
 {
     QPainter paint(parent->image);
-    paint.eraseRect(0,0,500,500);
+    paint.eraseRect(0,0, parent->imageSize.width(), parent->imageSize.height());
     for (auto i : layers) {
         paint.drawPixmap(i.first, *i.second);
     }
@@ -33,11 +33,12 @@ void PaintField::remove(QPointF point, QPixmap* pm)
 }
 
 PaintField::PaintField(MainWindow* parent) : parent(parent) {
+    //layers.push_back({QPointF(0,0), parent->image});
 
 }
 
 void PaintField::mousePressEvent(QMouseEvent *event) {
-    activeLayer = new QPixmap(500, 500);
+    activeLayer = new QPixmap(parent->imageSize);
     activeLayer->fill(Qt::transparent);
     painter = new QPainter(activeLayer);
     QPen pen(parent->color);
@@ -45,6 +46,29 @@ void PaintField::mousePressEvent(QMouseEvent *event) {
     painter->setPen(pen);
     bPoint = event->localPos();
     layers.push_back({QPointF(0, 0), activeLayer});
+}
+
+void PaintField::resizeEvent(QResizeEvent *event)
+{
+    qDebug() << "label resize";
+    // auto xnum = event->oldSize().width() / event->size().width();
+    // auto ynum = event->oldSize().height() / event->size().height();
+    // QTransform transform(xnum, 0, 0, ynum, 0, 0);
+    // for (auto i : layers) {
+    //     auto backup = *i.second;
+    //     i.second->fill(Qt::transparent);
+    //     QPainter painter(i.second);
+    //     painter.setTransform(transform);
+
+    // }
+    if (event->oldSize() == QSize(-1, -1)) { return; }
+    QSize scale(event->size() - event->oldSize());
+    parent->imageSize += scale;
+    *parent->image = parent->image->scaled(parent->imageSize);
+    for (auto i : layers) {
+        *i.second = i.second->scaled(parent->imageSize);
+    }
+    rerender();
 }
 
 void PaintField::mouseMoveEvent(QMouseEvent* event) {
@@ -58,7 +82,6 @@ void PaintField::mouseMoveEvent(QMouseEvent* event) {
     }
     activeLayer->fill(Qt::transparent);
     remove(QPointF(0, 0), activeLayer);
-    //painter->eraseRect(0,0,500,500);
     //activeLayer->clear();
     if (text == "straight line") {
         painter->drawLine(bPoint, event->localPos());

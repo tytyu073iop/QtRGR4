@@ -27,6 +27,7 @@ public:
     virtual void mouseReleaseEvent(QMouseEvent *event);
     virtual void mouseMoveEvent(QMouseEvent *event);
     virtual void mousePressEvent(QMouseEvent *event);
+    virtual void resizeEvent(QResizeEvent *event);
 };
 
 #endif // PAINTFIELD_H
