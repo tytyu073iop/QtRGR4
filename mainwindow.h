@@ -28,6 +28,7 @@ class MainWindow : public QMainWindow
     QAction* colorAction;
     QActionGroup* actionGroup = new QActionGroup(nullptr);
     int size = QPen().width();
+    QGridLayout* layersLayout = new QGridLayout();
 
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -44,6 +45,7 @@ public slots:
     void saveAsAction();
     void ChangeColour();
     void changeSize();
+    void newLayer(const QPixmap&);
 
 private:
     Ui::MainWindow *ui;

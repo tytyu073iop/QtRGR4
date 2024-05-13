@@ -9,12 +9,14 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    layerbutton.cpp \
     main.cpp \
     mainwindow.cpp \
     messagelabel.cpp \
     paintfield.cpp
 
 HEADERS += \
+    layerbutton.h \
     mainwindow.h \
     messagelabel.h \
     paintfield.h

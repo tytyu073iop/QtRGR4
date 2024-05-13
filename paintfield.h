@@ -7,6 +7,7 @@
 #include <QPainter>
 #include <QVector>
 #include <QPair>
+#include <QGridLayout>
 
 class MainWindow;
 
@@ -28,6 +29,12 @@ public:
     virtual void mouseMoveEvent(QMouseEvent *event);
     virtual void mousePressEvent(QMouseEvent *event);
     virtual void resizeEvent(QResizeEvent *event);
+
+public slots:
+    void del(size_t);
+
+signals:
+    void newLayer(const QPixmap&);
 };
 
 #endif // PAINTFIELD_H

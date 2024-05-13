@@ -71,6 +71,12 @@ void PaintField::resizeEvent(QResizeEvent *event)
     rerender();
 }
 
+void PaintField::del(size_t i)
+{
+    layers.removeAt(i);
+    rerender();
+}
+
 void PaintField::mouseMoveEvent(QMouseEvent* event) {
     //if (painter == nullptr) { return; }
 
@@ -93,5 +99,6 @@ void PaintField::mouseReleaseEvent(QMouseEvent *event) {
     //painter->drawLine(bPoint, event->localPos());
     painter->end();
     delete painter;
+    emit newLayer(*layers.last().second);
     rerender();
 }

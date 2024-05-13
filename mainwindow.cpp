@@ -11,21 +11,31 @@
 #include <QMouseEvent>
 #include <QInputDialog>
 #include <QStatusBar>
-
+#include <QGridLayout>
+#include <QPushButton>
+  #include <QSizePolicy>
+#include "layerbutton.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    imageSize.setHeight(500);
-    imageSize.setWidth(500);
+    imageSize.setHeight(label->height());
+    imageSize.setWidth(label->width());
     image = new QPixmap(imageSize);
     image->fill(Qt::white);
     label->setPixmap(*image);
     QPixmap colorPM(20, 20);
     colorPM.fill(Qt::black);
     colorAction = new QAction(QIcon(colorPM), "set color");
+
+    QWidget* widget = new QWidget;
+    QGridLayout* grid = new QGridLayout(widget);
+    grid->setColumnMinimumWidth(1, 200);
+    grid->addWidget(label, 0, 0);
+    grid->addWidget(new QPushButton("test"), 0, 1);
+    grid->addLayout(layersLayout, 0, 2);
 
     QToolBar* toolBar = new QToolBar();
     actionGroup->setExclusionPolicy(QActionGroup::ExclusionPolicy::ExclusiveOptional);
@@ -69,7 +79,8 @@ MainWindow::MainWindow(QWidget *parent)
     setMenuBar(menuBar);
     label->setAutoFillBackground(true);
     // label->setStyleSheet("background-color:white;");
-    setCentralWidget(label);
+    setCentralWidget(widget);
+    connect(label, &PaintField::newLayer, this, &MainWindow::newLayer);
 
     QStatusBar* statusBar = new QStatusBar(this);
     MessageLabel* messageLabel = new MessageLabel(this);
@@ -132,6 +143,31 @@ void MainWindow::ChangeColour()
 void MainWindow::changeSize()
 {
     size = QInputDialog::getInt(this, "size", "size", size, 0);
+}
+
+void MainWindow::newLayer(const QPixmap & lay)
+{
+    QGridLayout* currentLayer = new QGridLayout();
+    //currentLayer->setGeometry(QRect(0,0, 50, 30));
+    QPixmap pm(50,30);
+    pm.fill(Qt::white);
+    auto buff = lay.scaled(50, 30);
+    QPainter painter(&pm);
+    painter.drawPixmap(0,0, buff);
+    QLabel* preview = new QLabel();
+    preview->setPixmap(pm);
+    //preview->setFixedSize(50, 30);
+    currentLayer->addWidget(preview, 0, 0);
+    QLabel* text = new QLabel(QString::number(layersLayout->rowCount()));
+    //text->setFixedSize(50, 30);
+    currentLayer->addWidget(text, 0, 1);
+    //currentLayer->addWidget(text, 0, 2);
+    layerButton* trash = new layerButton(layersLayout->rowCount() - 1);
+    trash->setText("delete");
+    //trash->setFixedSize(10, 30);
+    connect(trash, &layerButton::SPClicked, label, &PaintField::del);
+    currentLayer->addWidget(trash, 0, 2);
+    layersLayout->addLayout(currentLayer, layersLayout->rowCount(), 0);
 }
 
 
