@@ -52,7 +52,7 @@ void PaintField::mouseMoveEvent(QMouseEvent* event) {
 
     auto text = parent->actionGroup->checkedAction()->iconText();
 
-    if (text == "Draw curved line") {
+    if (text == "curved line") {
 
         return;
     }
@@ -60,7 +60,7 @@ void PaintField::mouseMoveEvent(QMouseEvent* event) {
     remove(QPointF(0, 0), activeLayer);
     //painter->eraseRect(0,0,500,500);
     //activeLayer->clear();
-    if (text == "Draw straight line") {
+    if (text == "straight line") {
         painter->drawLine(bPoint, event->localPos());
         add(QPointF(0, 0), activeLayer);
     }

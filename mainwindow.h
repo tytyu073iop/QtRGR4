@@ -9,6 +9,7 @@
 #include <QActionGroup>
 #include <QPen>
 #include "paintfield.h"
+#include "messagelabel.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -32,6 +33,7 @@ public:
     ~MainWindow();
 
     friend PaintField;
+    friend MessageLabel;
 
 public slots:
     void openAction();

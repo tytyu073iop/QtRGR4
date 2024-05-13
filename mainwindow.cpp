@@ -10,6 +10,7 @@
 #include <QColorDialog>
 #include <QMouseEvent>
 #include <QInputDialog>
+#include <QStatusBar>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -26,10 +27,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     QToolBar* toolBar = new QToolBar();
     actionGroup->setExclusionPolicy(QActionGroup::ExclusionPolicy::ExclusiveOptional);
-    QAction* line = new QAction(*new QIcon(":/line.svg") ,"Draw straight line" ,actionGroup);
-    QAction* curvedLine = new QAction(*new QIcon(":/curveLine.svg"), "Draw curved line", actionGroup);
-    QAction* circle = new QAction(*new QIcon(":/circle.svg"), "Draw circle", actionGroup);
-    QAction* square = new QAction(*new QIcon(":/square.svg"), "Draw square", actionGroup);
+    QAction* line = new QAction(*new QIcon(":/line.svg") ,"straight line" ,actionGroup);
+    QAction* curvedLine = new QAction(*new QIcon(":/curveLine.svg"), "curved line", actionGroup);
+    QAction* circle = new QAction(*new QIcon(":/circle.svg"), "circle", actionGroup);
+    QAction* square = new QAction(*new QIcon(":/square.svg"), "square", actionGroup);
     for (auto i : actionGroup->actions()) {
         i->setCheckable(true);
         toolBar->addAction(i);
@@ -67,6 +68,14 @@ MainWindow::MainWindow(QWidget *parent)
     label->setAutoFillBackground(true);
     // label->setStyleSheet("background-color:white;");
     setCentralWidget(label);
+
+    QStatusBar* statusBar = new QStatusBar(this);
+    MessageLabel* messageLabel = new MessageLabel(this);
+    for (auto i : actionGroup->actions()) {
+        connect(i, &QAction::triggered, messageLabel, &MessageLabel::changed);
+    }
+    statusBar->insertPermanentWidget(0, messageLabel);
+    setStatusBar(statusBar);
 }
 
 MainWindow::~MainWindow()

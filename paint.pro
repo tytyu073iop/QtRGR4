@@ -11,10 +11,12 @@ CONFIG += c++17
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
+    messagelabel.cpp \
     paintfield.cpp
 
 HEADERS += \
     mainwindow.h \
+    messagelabel.h \
     paintfield.h
 
 FORMS +=
