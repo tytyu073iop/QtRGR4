@@ -10,10 +10,12 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    paintfield.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    paintfield.h
 
 FORMS += \
     mainwindow.ui

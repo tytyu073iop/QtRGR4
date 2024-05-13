@@ -5,6 +5,10 @@
 #include <QKeySequence>
 #include <QFileDialog>
 #include <QLabel>
+#include <QPainter>
+#include <QActionGroup>
+#include <QColorDialog>
+#include <QMouseEvent>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -13,20 +17,51 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    image->fill(Qt::white);
+    label->setPixmap(*image);
+    QPixmap colorPM(20, 20);
+    colorPM.fill(Qt::black);
+    colorAction = new QAction(QIcon(colorPM), "set color");
+
     QToolBar* toolBar = new QToolBar();
-    QAction* line = new QAction(*new QIcon(":/line.svg") ,"Draw straight line" ,toolBar);
-    toolBar->addAction(line);
+    actionGroup->setExclusionPolicy(QActionGroup::ExclusionPolicy::ExclusiveOptional);
+    QAction* line = new QAction(*new QIcon(":/line.svg") ,"Draw straight line" ,actionGroup);
+    QAction* curvedLine = new QAction(*new QIcon(":/curveLine.svg"), "Draw curved line", actionGroup);
+    QAction* circle = new QAction(*new QIcon(":/circle.svg"), "Draw circle", actionGroup);
+    QAction* square = new QAction(*new QIcon(":/square.svg"), "Draw square", actionGroup);
+    for (auto i : actionGroup->actions()) {
+        i->setCheckable(true);
+        toolBar->addAction(i);
+    }
     addToolBar(Qt::ToolBarArea::LeftToolBarArea, toolBar);
+    QToolBar* optionsBar = new QToolBar();
+    connect(colorAction, &QAction::triggered, this, &MainWindow::ChangeColour);
+    optionsBar->addAction(colorAction);
+    addToolBar(Qt::ToolBarArea::RightToolBarArea, optionsBar);
     QMenuBar* menuBar = new QMenuBar();
     QMenu* fileMenu = new QMenu("file" ,menuBar);
     QAction* open = new QAction("open...", fileMenu);
-    connect(open, &QAction::triggered, this, &MainWindow::openAction);
     open->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_O));
+    // open->setShortcut(QKeySequence(Qt::Key_Open));
+    connect(open, &QAction::triggered, this, &MainWindow::openAction);
     fileMenu->addAction(open);
+    QAction* save = new QAction("save", fileMenu);
+    save->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
+    connect(save, &QAction::triggered, this, &MainWindow::saveAction);
+    fileMenu->addAction(save);
+    QAction* saveAs = new QAction("save as...", fileMenu);
+    saveAs->setShortcut(QKeySequence(Qt::ALT + Qt::Key_S));
+    connect(saveAs, &QAction::triggered, this, &MainWindow::saveAsAction);
+    fileMenu->addAction(saveAs);
     menuBar->addMenu(fileMenu);
+    QMenu* debugMenu = new QMenu("debug" ,menuBar);
+    QAction* draw = new QAction("draw", debugMenu);
+    connect(draw, &QAction::triggered, this, &MainWindow::debugDraw);
+    debugMenu->addAction(draw);
+    menuBar->addMenu(debugMenu);
     setMenuBar(menuBar);
     label->setAutoFillBackground(true);
-    label->setStyleSheet("background-color:white;");
+    // label->setStyleSheet("background-color:white;");
     setCentralWidget(label);
 }
 
@@ -38,7 +73,41 @@ MainWindow::~MainWindow()
 void MainWindow::openAction()
 {
     currentFile = QFileDialog::getOpenFileName(this);
-    QPixmap image(currentFile);
-    label->setPixmap(image);
+    image->load(currentFile);
+    label->setPixmap(*image);
 }
+
+void MainWindow::saveAction()
+{
+    if (currentFile.isEmpty()) {
+        currentFile = QFileDialog::getSaveFileName(this);
+    }
+    image->save(currentFile);
+}
+
+void MainWindow::debugDraw()
+{
+    QPainter painter;
+    painter.begin(image);
+    painter.drawEllipse(100, 100, 100, 100);
+    painter.end();
+    label->setPixmap(*image);
+}
+
+void MainWindow::saveAsAction()
+{
+    currentFile = QString();
+    saveAction();
+}
+
+void MainWindow::ChangeColour()
+{
+    QColor newColor = QColorDialog::getColor(Qt::black, this);
+    QPixmap newPM(20, 20);
+    newPM.fill(newColor);
+    colorAction->setIcon(QIcon(newPM));
+    color = newColor;
+}
+
+
 

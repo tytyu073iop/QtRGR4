@@ -3,6 +3,11 @@
 
 #include <QMainWindow>
 #include <QLabel>
+#include <QPainter>
+//#include <Qt>
+#include <QPointF>
+#include <QActionGroup>
+#include "paintfield.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -12,14 +17,26 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
     QString currentFile;
-    QLabel* label = new QLabel();
+    PaintField* label = new PaintField(this);
+    QPixmap* image = new QPixmap(500, 500);
+    QColor color;
+    QAction* colorAction;
+    QActionGroup* actionGroup = new QActionGroup(nullptr);
+
+
 
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    friend PaintField;
+
 public slots:
     void openAction();
+    void saveAction();
+    void debugDraw();
+    void saveAsAction();
+    void ChangeColour();
 
 private:
     Ui::MainWindow *ui;

@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>line.svg</file>
+        <file>curveLine.svg</file>
+        <file>circle.svg</file>
+        <file>square.svg</file>
     </qresource>
 </RCC>
