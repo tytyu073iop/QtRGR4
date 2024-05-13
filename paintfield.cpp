@@ -40,7 +40,9 @@ void PaintField::mousePressEvent(QMouseEvent *event) {
     activeLayer = new QPixmap(500, 500);
     activeLayer->fill(Qt::transparent);
     painter = new QPainter(activeLayer);
-    painter->setPen(parent->color);
+    QPen pen(parent->color);
+    pen.setWidth(parent->size);
+    painter->setPen(pen);
     bPoint = event->localPos();
     layers.push_back({QPointF(0, 0), activeLayer});
 }
@@ -69,6 +71,4 @@ void PaintField::mouseReleaseEvent(QMouseEvent *event) {
     painter->end();
     delete painter;
     rerender();
-    parent->image->save(QFileDialog::getSaveFileName(parent));
-    qDebug() << activeLayer->save(QFileDialog::getSaveFileName(parent)) << layers.size();
 }

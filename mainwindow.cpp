@@ -9,6 +9,7 @@
 #include <QActionGroup>
 #include <QColorDialog>
 #include <QMouseEvent>
+#include <QInputDialog>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -37,6 +38,9 @@ MainWindow::MainWindow(QWidget *parent)
     QToolBar* optionsBar = new QToolBar();
     connect(colorAction, &QAction::triggered, this, &MainWindow::ChangeColour);
     optionsBar->addAction(colorAction);
+    QAction* sizeAction = new QAction("size", optionsBar);
+    optionsBar->addAction(sizeAction);
+    connect(sizeAction, &QAction::triggered, this, &MainWindow::changeSize);
     addToolBar(Qt::ToolBarArea::RightToolBarArea, optionsBar);
     QMenuBar* menuBar = new QMenuBar();
     QMenu* fileMenu = new QMenu("file" ,menuBar);
@@ -107,6 +111,11 @@ void MainWindow::ChangeColour()
     newPM.fill(newColor);
     colorAction->setIcon(QIcon(newPM));
     color = newColor;
+}
+
+void MainWindow::changeSize()
+{
+    size = QInputDialog::getInt(this, "size", "size", size, 0);
 }
 
 

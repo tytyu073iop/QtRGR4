@@ -7,6 +7,7 @@
 //#include <Qt>
 #include <QPointF>
 #include <QActionGroup>
+#include <QPen>
 #include "paintfield.h"
 
 QT_BEGIN_NAMESPACE
@@ -22,6 +23,7 @@ class MainWindow : public QMainWindow
     QColor color;
     QAction* colorAction;
     QActionGroup* actionGroup = new QActionGroup(nullptr);
+    int size = QPen().width();
 
 
 
@@ -37,6 +39,7 @@ public slots:
     void debugDraw();
     void saveAsAction();
     void ChangeColour();
+    void changeSize();
 
 private:
     Ui::MainWindow *ui;
