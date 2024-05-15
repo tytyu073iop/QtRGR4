@@ -10,13 +10,16 @@ CONFIG += c++17
 
 SOURCES += \
     layerbutton.cpp \
+    layerlabel.cpp \
     main.cpp \
     mainwindow.cpp \
     messagelabel.cpp \
     paintfield.cpp
 
 HEADERS += \
+    MyLayer.h \
     layerbutton.h \
+    layerlabel.h \
     mainwindow.h \
     messagelabel.h \
     paintfield.h

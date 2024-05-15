@@ -5,13 +5,14 @@
 #include <QRectF>
 #include <algorithm>
 #include <QFileDialog>
+#include <QDebug>
 
 void PaintField::rerender()
 {
     QPainter paint(parent->image);
     paint.eraseRect(0,0, parent->imageSize.width(), parent->imageSize.height());
     for (auto i : layers) {
-        paint.drawPixmap(i.first, *i.second);
+        paint.drawPixmap(0, 0, *i.layer);
     }
     this->setPixmap(*(parent->image));
 }
@@ -20,14 +21,14 @@ void PaintField::add(QPointF point, QPixmap* pm)
 {
     QPainter paint(parent->image);
     paint.drawPixmap(point, *pm);
-    layers.push_back({point, pm});
+    layers.push_back({pm});
     this->setPixmap(*(parent->image));
 }
 
 void PaintField::remove(QPointF point, QPixmap* pm)
 {
     //delete pm;
-    layers.removeAll({point, pm});
+    layers.removeAll({pm});
     rerender();
     //del on us
 }
@@ -45,7 +46,7 @@ void PaintField::mousePressEvent(QMouseEvent *event) {
     pen.setWidth(parent->size);
     painter->setPen(pen);
     bPoint = event->localPos();
-    layers.push_back({QPointF(0, 0), activeLayer});
+    layers.push_back({activeLayer});
 }
 
 void PaintField::resizeEvent(QResizeEvent *event)
@@ -61,12 +62,12 @@ void PaintField::resizeEvent(QResizeEvent *event)
     //     painter.setTransform(transform);
 
     // }
-    if (event->oldSize() == QSize(-1, -1)) { return; }
+    if (event->oldSize().height() <= 0 || event->oldSize().width() <= 0) { return; }
     QSize scale(event->size() - event->oldSize());
     parent->imageSize += scale;
     *parent->image = parent->image->scaled(parent->imageSize);
     for (auto i : layers) {
-        *i.second = i.second->scaled(parent->imageSize);
+        *i.layer = i.layer->scaled(parent->imageSize);
     }
     rerender();
 }
@@ -75,6 +76,7 @@ void PaintField::del(size_t i)
 {
     layers.removeAt(i);
     rerender();
+    parent->updateLayers();
 }
 
 void PaintField::mouseMoveEvent(QMouseEvent* event) {
@@ -99,6 +101,6 @@ void PaintField::mouseReleaseEvent(QMouseEvent *event) {
     //painter->drawLine(bPoint, event->localPos());
     painter->end();
     delete painter;
-    emit newLayer(*layers.last().second);
+    emit newLayer(*layers.last().layer);
     rerender();
 }

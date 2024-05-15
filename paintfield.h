@@ -8,6 +8,7 @@
 #include <QVector>
 #include <QPair>
 #include <QGridLayout>
+#include "MyLayer.h"
 
 class MainWindow;
 
@@ -19,7 +20,7 @@ class PaintField : public QLabel
     QPointF bPoint;
     QPixmap* activeLayer;
 protected:
-    QVector<QPair<QPointF, QPixmap*>> layers;
+    QVector<MyLayer> layers;
     void rerender();
     void add(QPointF, QPixmap*);
     void remove(QPointF, QPixmap*);
@@ -29,6 +30,7 @@ public:
     virtual void mouseMoveEvent(QMouseEvent *event);
     virtual void mousePressEvent(QMouseEvent *event);
     virtual void resizeEvent(QResizeEvent *event);
+    friend MainWindow;
 
 public slots:
     void del(size_t);

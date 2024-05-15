@@ -13,6 +13,8 @@
 #include <QStatusBar>
 #include <QGridLayout>
 #include <QPushButton>
+#include <QDebug>
+#include "layerlabel.h"
   #include <QSizePolicy>
 #include "layerbutton.h"
 
@@ -80,7 +82,7 @@ MainWindow::MainWindow(QWidget *parent)
     label->setAutoFillBackground(true);
     // label->setStyleSheet("background-color:white;");
     setCentralWidget(widget);
-    connect(label, &PaintField::newLayer, this, &MainWindow::newLayer);
+    connect(label, &PaintField::newLayer, this, &MainWindow::updateLayers);
 
     QStatusBar* statusBar = new QStatusBar(this);
     MessageLabel* messageLabel = new MessageLabel(this);
@@ -145,29 +147,26 @@ void MainWindow::changeSize()
     size = QInputDialog::getInt(this, "size", "size", size, 0);
 }
 
-void MainWindow::newLayer(const QPixmap & lay)
+void MainWindow::updateLayers()
 {
-    QGridLayout* currentLayer = new QGridLayout();
-    //currentLayer->setGeometry(QRect(0,0, 50, 30));
-    QPixmap pm(50,30);
-    pm.fill(Qt::white);
-    auto buff = lay.scaled(50, 30);
-    QPainter painter(&pm);
-    painter.drawPixmap(0,0, buff);
-    QLabel* preview = new QLabel();
-    preview->setPixmap(pm);
-    //preview->setFixedSize(50, 30);
-    currentLayer->addWidget(preview, 0, 0);
-    QLabel* text = new QLabel(QString::number(layersLayout->rowCount()));
-    //text->setFixedSize(50, 30);
-    currentLayer->addWidget(text, 0, 1);
-    //currentLayer->addWidget(text, 0, 2);
-    layerButton* trash = new layerButton(layersLayout->rowCount() - 1);
-    trash->setText("delete");
-    //trash->setFixedSize(10, 30);
-    connect(trash, &layerButton::SPClicked, label, &PaintField::del);
-    currentLayer->addWidget(trash, 0, 2);
-    layersLayout->addLayout(currentLayer, layersLayout->rowCount(), 0);
+    //deleting
+    for (size_t i = 0; i < layersLayout->rowCount(); i++) {
+        auto item = static_cast<LayerLabel*>(layersLayout->itemAtPosition(i,0));
+        qDebug() << layersLayout->rowCount() << item;
+        if (item == nullptr) { continue; }
+        layersLayout->removeItem(item);
+        item->setParent(nullptr);
+        delete item;
+        layersLayout->update();
+    }
+    //if (layersLayout->rowCount() == 2) { return; }
+    size_t counter = 0;
+    for (auto i : label->layers) {
+        LayerLabel* currentLayer = new LayerLabel(i, counter);
+        connect(currentLayer->trash, &layerButton::SPClicked, label, &PaintField::del);
+        layersLayout->addLayout(currentLayer, counter, 0);
+        counter++;
+    }
 }
 
 

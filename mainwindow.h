@@ -45,7 +45,7 @@ public slots:
     void saveAsAction();
     void ChangeColour();
     void changeSize();
-    void newLayer(const QPixmap&);
+    void updateLayers();
 
 private:
     Ui::MainWindow *ui;
