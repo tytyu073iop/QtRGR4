@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <QFileDialog>
 #include <QDebug>
+#include "resizedialog.h"
 
 void PaintField::rerender()
 {
@@ -77,6 +78,14 @@ void PaintField::del(size_t i)
     layers.removeAt(i);
     rerender();
     parent->updateLayers();
+}
+
+void PaintField::resize(size_t i)
+{
+    ResizeDialog* dialog = new ResizeDialog(parent);
+    if (dialog->exec() == QDialog::Accepted) {
+
+    }
 }
 
 void PaintField::mouseMoveEvent(QMouseEvent* event) {

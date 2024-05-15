@@ -34,6 +34,7 @@ public:
 
 public slots:
     void del(size_t);
+    void resize(size_t);
 
 signals:
     void newLayer(const QPixmap&);

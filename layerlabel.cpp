@@ -10,6 +10,7 @@ LayerLabel::~LayerLabel()
     delete preview;
     delete text;
     delete trash;
+    delete resize;
 }
 
 LayerLabel::LayerLabel(const MyLayer& i, size_t counter)
@@ -32,5 +33,8 @@ LayerLabel::LayerLabel(const MyLayer& i, size_t counter)
     //trash->setFixedSize(10, 30);
     //connect(trash, &layerButton::SPClicked, label, &PaintField::del);
     this->addWidget(trash, 0, 2);
+    resize = new layerButton(counter);
+    resize->setText("edit");
+    this->addWidget(resize, 0, 3);
     //layersLayout->addLayout(currentLayer, counter, 0);
 }

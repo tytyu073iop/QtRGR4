@@ -14,7 +14,8 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     messagelabel.cpp \
-    paintfield.cpp
+    paintfield.cpp \
+    resizedialog.cpp
 
 HEADERS += \
     MyLayer.h \
@@ -22,7 +23,8 @@ HEADERS += \
     layerlabel.h \
     mainwindow.h \
     messagelabel.h \
-    paintfield.h
+    paintfield.h \
+    resizedialog.h
 
 FORMS +=
 

@@ -14,6 +14,7 @@ class LayerLabel : public QGridLayout
     QLabel* text;
 public:
     layerButton* trash;
+    layerButton* resize;
     ~LayerLabel();
     LayerLabel(const MyLayer &i, size_t counter);
 };
