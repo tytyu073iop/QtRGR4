@@ -16,11 +16,13 @@ class ResizeDialog : public QDialog
     QLineEdit* s;
     QLineEdit* r;
 public:
-    ResizeDialog(QWidget *parent, int height, int width, float scale, int rotate);
+    ResizeDialog(QWidget *parent);
+    ~ResizeDialog();
     int GetHeight();
     int GetWidth();
     int GetRotate();
     float GetScale();
+    int exec(int height, int width, float scale, int rotate);
 };
 
 #endif // RESIZEDIALOG_H

@@ -10,10 +10,11 @@
 
 void PaintField::rerender()
 {
+    qDebug() << "rerendering";
     QPainter paint(parent->image);
     paint.eraseRect(0,0, parent->imageSize.width(), parent->imageSize.height());
     for (auto i : layers) {
-        paint.drawPixmap(0, 0, *i.layer);
+        paint.drawPixmap(i.point.x(), i.point.y(), *i.layer, 0, 0, parent->imageSize.width(), parent->imageSize.height());
     }
     this->setPixmap(*(parent->image));
 }
@@ -52,7 +53,7 @@ void PaintField::mousePressEvent(QMouseEvent *event) {
 
 void PaintField::resizeEvent(QResizeEvent *event)
 {
-    qDebug() << "label resize";
+    qDebug() << "label resize" << event->size();
     // auto xnum = event->oldSize().width() / event->size().width();
     // auto ynum = event->oldSize().height() / event->size().height();
     // QTransform transform(xnum, 0, 0, ynum, 0, 0);
@@ -83,9 +84,23 @@ void PaintField::del(size_t i)
 void PaintField::resize(size_t i)
 {
     ResizeDialog* dialog = new ResizeDialog(parent);
-    if (dialog->exec() == QDialog::Accepted) {
-
+    if (dialog->exec(layers[i].point.x(), layers[i].point.y(),1,0) == QDialog::Accepted) {
+        QTransform transform;
+        transform.scale(dialog->GetScale(), dialog->GetScale());
+        qDebug() << dialog->GetWidth();
+        //transform.translate(dialog->GetWidth(), dialog->GetHeight());
+        layers[i].point = QPoint(dialog->GetHeight(), dialog->GetWidth());
+        transform.rotate(dialog->GetRotate());
+        auto backup = layers[i].layer->transformed(transform);
+        layers[i].layer->fill(Qt::transparent);
+        QPainter painter(layers[i].layer);
+        painter.drawPixmap(0,0,backup);
+        qDebug() << layers[i].layer->height();
+        //QPainter painter(layers[i].layer);
+        //painter.drawLine(0,0,50,50);
+        rerender();
     }
+    delete dialog;
 }
 
 void PaintField::mouseMoveEvent(QMouseEvent* event) {

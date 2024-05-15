@@ -36,6 +36,8 @@ MainWindow::MainWindow(QWidget *parent)
     QGridLayout* grid = new QGridLayout(widget);
     grid->setColumnMinimumWidth(1, 200);
     grid->addWidget(label, 0, 0);
+    grid->setColumnStretch(0, 10);
+    grid->setRowStretch(0, 10);
     grid->addWidget(new QPushButton("test"), 0, 1);
     grid->addLayout(layersLayout, 0, 2);
 
