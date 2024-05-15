@@ -12,7 +12,7 @@ void ColorButton::CallDialog(size_t s)
 {
     auto newColor = QColorDialog::getColor(color);
     QPixmap pm(20,20);
-    pm.fill(color);
+    pm.fill(newColor);
     this->setIcon(QIcon(pm));
-    emit GotColor(color, s);
+    emit GotColor(newColor, s);
 }

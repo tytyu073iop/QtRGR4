@@ -35,7 +35,7 @@ public:
 public slots:
     void del(size_t);
     void resize(size_t);
-    void changeColor(size_t, const QColor&);
+    void changeColor(const QColor&, size_t);
 
 signals:
     void newLayer(const QPixmap&);

@@ -108,11 +108,21 @@ void PaintField::resize(size_t i)
     delete dialog;
 }
 
-void PaintField::changeColor(size_t, const QColor & color)
+void PaintField::changeColor(const QColor & color, size_t i)
 {
-    QGraphicsColorizeEffect* gce = new QGraphicsColorizeEffect();
-    gce->setColor(color);
-    layers[i].layer->set
+    auto image = layers[i].layer->toImage();
+    qDebug() << layers[i].color << color << image.pixelColor(0,0);
+    for (int var = 0; var < image.height(); ++var) {
+        for (int j = 0; j < image.width(); ++j) {
+            if (image.pixelColor(j, var) != QColor(0,0,0,0)) {
+                image.setPixelColor(j, var, color);
+            }
+        }
+    }
+    image.save(QFileDialog::getSaveFileName(parent));
+    layers[i].color = color;
+    *layers[i].layer = QPixmap::fromImage(image);
+    rerender();
 }
 
 void PaintField::mouseMoveEvent(QMouseEvent* event) {

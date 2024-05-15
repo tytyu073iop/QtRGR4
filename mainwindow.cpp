@@ -168,6 +168,7 @@ void MainWindow::updateLayers()
         LayerLabel* currentLayer = new LayerLabel(i, counter);
         connect(currentLayer->trash, &layerButton::SPClicked, label, &PaintField::del);
         connect(currentLayer->resize, &layerButton::SPClicked, label, &PaintField::resize);
+        connect(currentLayer->cb, SIGNAL(GotColor(QColor,size_t)), label, SLOT(changeColor(QColor,size_t)));
         layersLayout->addLayout(currentLayer, counter, 0);
         counter++;
     }
