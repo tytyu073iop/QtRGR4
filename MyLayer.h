@@ -6,6 +6,7 @@
 struct MyLayer {
     QPixmap* layer;
     QPoint point;
+    QColor color;
     bool operator==(const MyLayer& other) const {
         return layer == other.layer;
     }

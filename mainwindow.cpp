@@ -17,6 +17,7 @@
 #include "layerlabel.h"
   #include <QSizePolicy>
 #include "layerbutton.h"
+#include "colorbutton.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)

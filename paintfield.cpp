@@ -7,6 +7,7 @@
 #include <QFileDialog>
 #include <QDebug>
 #include "resizedialog.h"
+#include <QGraphicsColorizeEffect>
 
 void PaintField::rerender()
 {
@@ -19,11 +20,15 @@ void PaintField::rerender()
     this->setPixmap(*(parent->image));
 }
 
-void PaintField::add(QPointF point, QPixmap* pm)
+void PaintField::add(QPointF point, QPixmap* pm, const QColor& color)
 {
     QPainter paint(parent->image);
     paint.drawPixmap(point, *pm);
-    layers.push_back({pm});
+    MyLayer layer;
+    layer.layer = pm;
+    layer.point = point.toPoint();
+    layer.color = color;
+    layers.push_back(layer);
     this->setPixmap(*(parent->image));
 }
 
@@ -103,6 +108,13 @@ void PaintField::resize(size_t i)
     delete dialog;
 }
 
+void PaintField::changeColor(size_t, const QColor & color)
+{
+    QGraphicsColorizeEffect* gce = new QGraphicsColorizeEffect();
+    gce->setColor(color);
+    layers[i].layer->set
+}
+
 void PaintField::mouseMoveEvent(QMouseEvent* event) {
     //if (painter == nullptr) { return; }
 
@@ -117,7 +129,7 @@ void PaintField::mouseMoveEvent(QMouseEvent* event) {
     //activeLayer->clear();
     if (text == "straight line") {
         painter->drawLine(bPoint, event->localPos());
-        add(QPointF(0, 0), activeLayer);
+        add(QPointF(0, 0), activeLayer, parent->color);
     }
 }
 

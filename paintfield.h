@@ -22,7 +22,7 @@ class PaintField : public QLabel
 protected:
     QVector<MyLayer> layers;
     void rerender();
-    void add(QPointF, QPixmap*);
+    void add(QPointF, QPixmap*, const QColor&);
     void remove(QPointF, QPixmap*);
 public:
     PaintField(MainWindow* parent = nullptr);
@@ -35,6 +35,7 @@ public:
 public slots:
     void del(size_t);
     void resize(size_t);
+    void changeColor(size_t, const QColor&);
 
 signals:
     void newLayer(const QPixmap&);

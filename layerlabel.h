@@ -6,6 +6,7 @@
 #include "MyLayer.h"
 #include <QLabel>
 #include "layerbutton.h"
+#include "colorbutton.h"
 
 class LayerLabel : public QGridLayout
 {
@@ -15,6 +16,7 @@ class LayerLabel : public QGridLayout
 public:
     layerButton* trash;
     layerButton* resize;
+    ColorButton* cb;
     ~LayerLabel();
     LayerLabel(const MyLayer &i, size_t counter);
 };

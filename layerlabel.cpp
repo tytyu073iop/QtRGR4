@@ -4,6 +4,7 @@
 #include <QPixmap>
 #include <QPainter>
 #include <QLabel>
+#include "colorbutton.h"
 
 LayerLabel::~LayerLabel()
 {
@@ -11,6 +12,7 @@ LayerLabel::~LayerLabel()
     delete text;
     delete trash;
     delete resize;
+    delete cb;
 }
 
 LayerLabel::LayerLabel(const MyLayer& i, size_t counter)
@@ -36,5 +38,7 @@ LayerLabel::LayerLabel(const MyLayer& i, size_t counter)
     resize = new layerButton(counter);
     resize->setText("edit");
     this->addWidget(resize, 0, 3);
+    cb = new ColorButton(i.color, counter);
+    this->addWidget(cb, 0, 4);
     //layersLayout->addLayout(currentLayer, counter, 0);
 }
