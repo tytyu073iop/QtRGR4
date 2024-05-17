@@ -23,6 +23,7 @@ void PaintField::rerender()
         paint.rotate(-rot);
     }
     this->setPixmap(*(parent->image));
+    qDebug() << "render ended";
 }
 
 void PaintField::add(QPointF point, QPixmap* pm, const QColor& color, const Figure& figa)
@@ -52,9 +53,10 @@ PaintField::PaintField(MainWindow* parent) : parent(parent) {
 
 }
 
-void PaintField::resizeEvent(QResizeEvent *event)
+void PaintField::catchResize(QResizeEvent *event)
 {
-    // qDebug() << "label resize" << event->size();
+    if (parent->noResize) { parent->noResize = false; return; }
+    qDebug() << "label resize" << event->size();
     // auto xnum = event->oldSize().width() / event->size().width();
     // auto ynum = event->oldSize().height() / event->size().height();
     // QTransform transform(xnum, 0, 0, ynum, 0, 0);
@@ -65,14 +67,19 @@ void PaintField::resizeEvent(QResizeEvent *event)
     //     painter.setTransform(transform);
 
     // }
-    // if (event->oldSize().height() <= 0 || event->oldSize().width() <= 0) { return; }
-    // QSize scale(event->size() - event->oldSize());
-    // parent->imageSize += scale;
-    // *parent->image = parent->image->scaled(parent->imageSize);
-    // for (const auto& i : layers) {
-    //     *i->layer = i->layer->scaled(parent->imageSize);
-    // }
-    // rerender();
+    if (event->oldSize().height() <= 0 || event->oldSize().width() <= 0) { return; }
+    QSize scale(event->size() - event->oldSize());
+    parent->imageSize = event->size();
+    *parent->image = parent->image->scaled(parent->imageSize);
+    for (const auto& i : layers) {
+        *i->layer = i->layer->scaled(parent->imageSize);
+    }
+    rerender();
+}
+
+void PaintField::resizeEvent(QResizeEvent *event)
+{
+    catchResize(event);
 }
 
 void PaintField::del(size_t i)
@@ -122,6 +129,7 @@ void PaintField::changeColor(const QColor & color, size_t i)
 }
 
 void PaintField::mousePressEvent(QMouseEvent *event) {
+    qDebug() << this->size() << parent->imageSize;
     if (event->button() == Qt::MouseButton::RightButton) {
         for (const auto& i : layers) {
             i->startAnimation();

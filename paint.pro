@@ -16,7 +16,8 @@ SOURCES += \
     mainwindow.cpp \
     messagelabel.cpp \
     paintfield.cpp \
-    resizedialog.cpp
+    resizedialog.cpp \
+    resizefilter.cpp
 
 HEADERS += \
     MyLayer.h \
@@ -26,7 +27,8 @@ HEADERS += \
     mainwindow.h \
     messagelabel.h \
     paintfield.h \
-    resizedialog.h
+    resizedialog.h \
+    resizefilter.h
 
 FORMS += \
     mainwindow.ui

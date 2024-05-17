@@ -30,6 +30,7 @@ class MainWindow : public QMainWindow
     QActionGroup* actionGroup = new QActionGroup(nullptr);
     int size = QPen().width();
     QGridLayout* layersLayout = new QGridLayout();
+    bool noResize = false;
 
 public:
     MainWindow(QWidget *parent = nullptr);

@@ -18,6 +18,7 @@
   #include <QSizePolicy>
 #include "layerbutton.h"
 #include "colorbutton.h"
+#include "resizefilter.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -69,16 +70,16 @@ MainWindow::MainWindow(QWidget *parent)
     QMenuBar* menuBar = new QMenuBar();
     QMenu* fileMenu = new QMenu("file" ,menuBar);
     QAction* open = new QAction("open...", fileMenu);
-    open->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_O));
+    open->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_O));
     // open->setShortcut(QKeySequence(Qt::Key_Open));
     connect(open, &QAction::triggered, this, &MainWindow::openAction);
     fileMenu->addAction(open);
     QAction* save = new QAction("save", fileMenu);
-    save->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
+    save->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_S));
     connect(save, &QAction::triggered, this, &MainWindow::saveAction);
     fileMenu->addAction(save);
     QAction* saveAs = new QAction("save as...", fileMenu);
-    saveAs->setShortcut(QKeySequence(Qt::ALT + Qt::Key_S));
+    saveAs->setShortcut(QKeySequence(Qt::ALT | Qt::Key_S));
     connect(saveAs, &QAction::triggered, this, &MainWindow::saveAsAction);
     fileMenu->addAction(saveAs);
     menuBar->addMenu(fileMenu);
@@ -109,16 +110,24 @@ MainWindow::~MainWindow()
 
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
-    // qDebug() << "main resize";
+
+    qDebug() << event->type();
+    //label->catchResize(event);
+
 }
 
 void MainWindow::openAction()
 {
+    noResize = true;
+    // QObject* ef = new ResizeFilter(this, this);
+    // installEventFilter(ef);
     currentFile = QFileDialog::getOpenFileName(this);
     raw->load(currentFile);
     imageSize = raw->size();
     label->setPixmap(*image);
     label->rerender();
+    // removeEventFilter(ef);
+    // delete ef;
 }
 
 void MainWindow::saveAction()
@@ -161,7 +170,10 @@ void MainWindow::changeSize()
 void MainWindow::updateLayers()
 {
     //deleting
-    for (size_t i = 0; i < layersLayout->rowCount(); i++) {
+    if (layersLayout->itemAtPosition(0,0) == nullptr) {
+        noResize = true;
+    }
+    for (int i = 0; i < layersLayout->rowCount(); i++) {
         auto item = static_cast<LayerLabel*>(layersLayout->itemAtPosition(i,0));
         qDebug() << layersLayout->rowCount() << item;
         if (item == nullptr) { continue; }
@@ -180,6 +192,7 @@ void MainWindow::updateLayers()
         layersLayout->addLayout(currentLayer, counter, 0);
         counter++;
     }
+    qDebug() << "end of layers";
 }
 
 
