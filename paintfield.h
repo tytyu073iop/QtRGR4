@@ -20,10 +20,10 @@ class PaintField : public QLabel
     QPointF bPoint;
     QPixmap* activeLayer;
 protected:
-    QVector<MyLayer> layers;
+    QVector<MyLayer*> layers;
     void rerender();
     void add(QPointF, QPixmap*, const QColor&);
-    void remove(QPointF, QPixmap*);
+    void removelast();
 public:
     PaintField(MainWindow* parent = nullptr);
     virtual void mouseReleaseEvent(QMouseEvent *event);
@@ -31,6 +31,7 @@ public:
     virtual void mousePressEvent(QMouseEvent *event);
     virtual void resizeEvent(QResizeEvent *event);
     friend MainWindow;
+
 
 public slots:
     void del(size_t);

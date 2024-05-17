@@ -18,7 +18,7 @@ public:
     layerButton* resize;
     ColorButton* cb;
     ~LayerLabel();
-    LayerLabel(const MyLayer &i, size_t counter);
+    LayerLabel(const MyLayer* i, size_t counter);
 };
 
 #endif // LAYERLABEL_H

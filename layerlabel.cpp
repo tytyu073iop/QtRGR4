@@ -15,11 +15,11 @@ LayerLabel::~LayerLabel()
     delete cb;
 }
 
-LayerLabel::LayerLabel(const MyLayer& i, size_t counter)
+LayerLabel::LayerLabel(const MyLayer* i, size_t counter)
 {
     QPixmap pm(50,30);
     pm.fill(Qt::white);
-    auto buff = i.layer->scaled(50, 30);
+    auto buff = i->layer->scaled(50, 30);
     QPainter painter(&pm);
     painter.drawPixmap(0,0, buff);
     preview = new QLabel();
@@ -38,7 +38,7 @@ LayerLabel::LayerLabel(const MyLayer& i, size_t counter)
     resize = new layerButton(counter);
     resize->setText("edit");
     this->addWidget(resize, 0, 3);
-    cb = new ColorButton(i.color, counter);
+    cb = new ColorButton(i->color, counter);
     this->addWidget(cb, 0, 4);
     //layersLayout->addLayout(currentLayer, counter, 0);
 }
