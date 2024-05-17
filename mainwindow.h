@@ -23,6 +23,7 @@ class MainWindow : public QMainWindow
     QString currentFile;
     QSize imageSize;
     PaintField* label = new PaintField(this);
+    QPixmap* raw;
     QPixmap* image;
     QColor color;
     QAction* colorAction;

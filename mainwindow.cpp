@@ -26,6 +26,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     imageSize.setHeight(label->height());
     imageSize.setWidth(label->width());
+    raw = new QPixmap(imageSize);
+    raw->fill(Qt::transparent);
     image = new QPixmap(imageSize);
     image->fill(Qt::white);
     label->setPixmap(*image);
@@ -113,8 +115,10 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 void MainWindow::openAction()
 {
     currentFile = QFileDialog::getOpenFileName(this);
-    image->load(currentFile);
+    raw->load(currentFile);
+    imageSize = raw->size();
     label->setPixmap(*image);
+    label->rerender();
 }
 
 void MainWindow::saveAction()

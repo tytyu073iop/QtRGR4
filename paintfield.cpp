@@ -12,8 +12,10 @@
 void PaintField::rerender()
 {
     qDebug() << "rerendering";
+    *parent->image = QPixmap(parent->imageSize);
     QPainter paint(parent->image);
     paint.eraseRect(0,0, parent->imageSize.width(), parent->imageSize.height());
+    paint.drawPixmap(0,0,*parent->raw);
     for (const auto& i : layers) {
         auto rot = i->angle;
         paint.rotate(rot);
@@ -52,7 +54,7 @@ PaintField::PaintField(MainWindow* parent) : parent(parent) {
 
 void PaintField::resizeEvent(QResizeEvent *event)
 {
-    qDebug() << "label resize" << event->size();
+    // qDebug() << "label resize" << event->size();
     // auto xnum = event->oldSize().width() / event->size().width();
     // auto ynum = event->oldSize().height() / event->size().height();
     // QTransform transform(xnum, 0, 0, ynum, 0, 0);
@@ -63,14 +65,14 @@ void PaintField::resizeEvent(QResizeEvent *event)
     //     painter.setTransform(transform);
 
     // }
-    if (event->oldSize().height() <= 0 || event->oldSize().width() <= 0) { return; }
-    QSize scale(event->size() - event->oldSize());
-    parent->imageSize += scale;
-    *parent->image = parent->image->scaled(parent->imageSize);
-    for (const auto& i : layers) {
-        *i->layer = i->layer->scaled(parent->imageSize);
-    }
-    rerender();
+    // if (event->oldSize().height() <= 0 || event->oldSize().width() <= 0) { return; }
+    // QSize scale(event->size() - event->oldSize());
+    // parent->imageSize += scale;
+    // *parent->image = parent->image->scaled(parent->imageSize);
+    // for (const auto& i : layers) {
+    //     *i->layer = i->layer->scaled(parent->imageSize);
+    // }
+    // rerender();
 }
 
 void PaintField::del(size_t i)
