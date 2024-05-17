@@ -13,6 +13,8 @@ struct MyLayer : QObject {
 private:
     Q_OBJECT
 public:
+    Q_PROPERTY(int angle MEMBER angle)
+    Q_PROPERTY(QPoint point MEMBER point)
     Figure figa;
     QPixmap* layer;
     QPoint point;

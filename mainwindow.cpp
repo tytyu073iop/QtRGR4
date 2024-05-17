@@ -45,9 +45,13 @@ MainWindow::MainWindow(QWidget *parent)
     QToolBar* toolBar = new QToolBar();
     actionGroup->setExclusionPolicy(QActionGroup::ExclusionPolicy::ExclusiveOptional);
     QAction* line = new QAction(*new QIcon(":/line.svg") ,"straight line" ,actionGroup);
+    actionGroup->addAction(line);
     QAction* curvedLine = new QAction(*new QIcon(":/curveLine.svg"), "curved line", actionGroup);
+    actionGroup->addAction(curvedLine);
     QAction* circle = new QAction(*new QIcon(":/circle.svg"), "circle", actionGroup);
+    actionGroup->addAction(circle);
     QAction* square = new QAction(*new QIcon(":/square.svg"), "square", actionGroup);
+    actionGroup->addAction(square);
     for (auto i : actionGroup->actions()) {
         i->setCheckable(true);
         toolBar->addAction(i);

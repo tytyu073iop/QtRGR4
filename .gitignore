@@ -1,3 +1,5 @@
 ./paint.pro.user
 build/*
 paint.pro.user
+
+build/Qt_6_7_0_for_macOS-Debug/.app/Contents/MacOS/paint/paint

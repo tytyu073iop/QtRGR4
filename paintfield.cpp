@@ -28,6 +28,7 @@ void PaintField::add(QPointF point, QPixmap* pm, const QColor& color)
     layer->layer = pm;
     layer->point = point.toPoint();
     layer->color = color;
+    connect(layer, SIGNAL(rerender()), this, SLOT(rerender()));
     auto text = parent->actionGroup->checkedAction()->iconText();
     if (text == "straight line") {
         layer->figa = Figure::straight;

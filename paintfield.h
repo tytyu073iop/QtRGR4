@@ -21,7 +21,7 @@ class PaintField : public QLabel
     QPixmap* activeLayer;
 protected:
     QVector<MyLayer*> layers;
-    void rerender();
+
     void add(QPointF, QPixmap*, const QColor&);
     void removelast();
 public:
@@ -34,6 +34,7 @@ public:
 
 
 public slots:
+    void rerender();
     void del(size_t);
     void resize(size_t);
     void changeColor(const QColor&, size_t);
