@@ -38,7 +38,7 @@ inline MyLayer::~MyLayer()
 
 inline void MyLayer::startAnimation()
 {
-    QPropertyAnimation* animation = new QPropertyAnimation(this, figa == Figure::circle ? "angle" : "point");
+    QPropertyAnimation* animation = new QPropertyAnimation(this, figa == Figure::square ? "angle" : "point");
     qDebug() << "animation!" << animation->propertyName();
     animation->setDuration(500);
     QPoint mov;
@@ -46,10 +46,10 @@ inline void MyLayer::startAnimation()
         mov = QPoint(20,20);
     } else if(figa == Figure::line) {
         mov = QPoint(100, 0);
-    } else if(figa == Figure::square) {
+    } else if(figa == Figure::circle) {
         mov = QPoint(0, 100);
     }
-    if (figa == Figure::circle) {
+    if (figa == Figure::square) {
         int newAngle = 90;
         animation->setKeyValueAt(0.5f, newAngle);
         animation->setEndValue(angle);

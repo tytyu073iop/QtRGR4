@@ -15,12 +15,15 @@ void PaintField::rerender()
     QPainter paint(parent->image);
     paint.eraseRect(0,0, parent->imageSize.width(), parent->imageSize.height());
     for (const auto& i : layers) {
+        auto rot = i->angle;
+        paint.rotate(rot);
         paint.drawPixmap(i->point.x(), i->point.y(), *i->layer, 0, 0, parent->imageSize.width(), parent->imageSize.height());
+        paint.rotate(-rot);
     }
     this->setPixmap(*(parent->image));
 }
 
-void PaintField::add(QPointF point, QPixmap* pm, const QColor& color)
+void PaintField::add(QPointF point, QPixmap* pm, const QColor& color, const Figure& figa)
 {
     QPainter paint(parent->image);
     paint.drawPixmap(point, *pm);
@@ -28,11 +31,8 @@ void PaintField::add(QPointF point, QPixmap* pm, const QColor& color)
     layer->layer = pm;
     layer->point = point.toPoint();
     layer->color = color;
+    layer->figa = figa;
     connect(layer, SIGNAL(rerender()), this, SLOT(rerender()));
-    auto text = parent->actionGroup->checkedAction()->iconText();
-    if (text == "straight line") {
-        layer->figa = Figure::straight;
-    }
     layers.push_back(layer);
     this->setPixmap(*(parent->image));
 }
@@ -48,25 +48,6 @@ void PaintField::removelast()
 PaintField::PaintField(MainWindow* parent) : parent(parent) {
     //layers.push_back({QPointF(0,0), parent->image});
 
-}
-
-void PaintField::mousePressEvent(QMouseEvent *event) {
-    if (event->button() == Qt::MouseButton::RightButton) {
-        for (const auto& i : layers) {
-            i->startAnimation();
-        }
-        return;
-    }
-    activeLayer = new QPixmap(parent->imageSize);
-    activeLayer->fill(Qt::transparent);
-    painter = new QPainter(activeLayer);
-    QPen pen(parent->color);
-    pen.setWidth(parent->size);
-    painter->setPen(pen);
-    bPoint = event->localPos();
-    MyLayer* layer = new MyLayer;
-    layer->layer = activeLayer;
-    layers.push_back(layer);
 }
 
 void PaintField::resizeEvent(QResizeEvent *event)
@@ -138,10 +119,35 @@ void PaintField::changeColor(const QColor & color, size_t i)
     rerender();
 }
 
+void PaintField::mousePressEvent(QMouseEvent *event) {
+    if (event->button() == Qt::MouseButton::RightButton) {
+        for (const auto& i : layers) {
+            i->startAnimation();
+        }
+        return;
+    }
+    activeLayer = new QPixmap(parent->imageSize);
+    activeLayer->fill(Qt::transparent);
+    painter = new QPainter(activeLayer);
+    QPen pen(parent->color);
+    pen.setWidth(parent->size);
+    painter->setPen(pen);
+    bPoint = event->localPos();
+    MyLayer* layer = new MyLayer;
+    layer->layer = activeLayer;
+    auto text = parent->actionGroup->checkedAction()->iconText();
+    if (text == "curved line") {
+        layer->figa = Figure::line;
+    }
+    layers.push_back(layer);
+}
+
 void PaintField::mouseMoveEvent(QMouseEvent* event) {
     if (painter == nullptr) { return; }
     auto text = parent->actionGroup->checkedAction()->iconText();
     if (text == "curved line") {
+        painter->drawPoint(event->localPos());
+        rerender();
         return;
     }
     activeLayer->fill(Qt::transparent);
@@ -149,7 +155,13 @@ void PaintField::mouseMoveEvent(QMouseEvent* event) {
     //activeLayer->clear();
     if (text == "straight line") {
         painter->drawLine(bPoint, event->localPos());
-        add(QPointF(0, 0), activeLayer, parent->color);
+        add(QPointF(0, 0), activeLayer, parent->color, Figure::straight);
+    } else if (text == "circle") {
+        painter->drawEllipse(QRect(bPoint.toPoint(), event->localPos().toPoint()));
+        add(QPointF(0, 0), activeLayer, parent->color, Figure::circle);
+    } else if (text == "square") {
+        painter->drawRect(QRect(bPoint.toPoint(), event->localPos().toPoint()));
+        add(QPointF(0, 0), activeLayer, parent->color, Figure::square);
     }
 }
 

@@ -22,7 +22,7 @@ class PaintField : public QLabel
 protected:
     QVector<MyLayer*> layers;
 
-    void add(QPointF, QPixmap*, const QColor&);
+    void add(QPointF, QPixmap*, const QColor&, const Figure& figa);
     void removelast();
 public:
     PaintField(MainWindow* parent = nullptr);
